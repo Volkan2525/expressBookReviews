@@ -7,7 +7,15 @@ const public_users = express.Router();
 
 public_users.post("/register", (req,res) => {
   //Write your code here
-  return res.status(300).json({message: "Yet to be implemented"});
+  username = req.body.username;
+  password = req.body.password;
+
+
+  let result = users.push({username:password});
+  if (result)
+    return res.send("User addded");
+else
+    return res.status(300).json({message: "Yet to be implemented"});
 });
 
 // Get the book list available in the shop
@@ -35,23 +43,28 @@ public_users.get('/isbn/:isbn',function (req, res) {
 public_users.get('/author/:author',function (req, res) {
   //Write your code here
   let authorParam = req.params.author;
-  let bookArray = books;
-  console.log(bookArray)
-  let bookFound = bookArray.forEach(element => {
-    if(element['author']==authorParam)
-        return element
+  const bookArray = Object.keys(books);
+
+  bookArray.forEach(element => {
+    if(books[element]['author']==authorParam)
+        res.send(books[element])
   });
 
-  if(bookFound)
-    return req.send(bookFound)
-  else
-    return res.status(300).json({message: "Yet to be implemented"});
+    //return res.status(300).json({message: "Yet to be implemented"});
 });
 
 // Get all books based on title
 public_users.get('/title/:title',function (req, res) {
   //Write your code here
-  return res.status(300).json({message: "Yet to be implemented"});
+    let titleParam = req.params.title;
+    const bookArray = Object.keys(books);
+  
+    bookArray.forEach(element => {
+      if(books[element]['title']==titleParam)
+          res.send(books[element])
+    });
+  
+      //return res.status(300).json({message: "Yet to be implemented"});
 });
 
 //  Get book review
@@ -62,7 +75,7 @@ public_users.get('/review/:isbn',function (req, res) {
   if(foundBook)
     res.send(foundBook["reviews"]);
   else
-    return res.status(300).json({message: "Error"});
+    return res.status(300).json({message: "Reviews error"});
 });
 
 module.exports.general = public_users;
