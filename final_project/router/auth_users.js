@@ -12,15 +12,12 @@ username != ""
 }
 
 const authenticatedUser = (username,password)=>{ //returns boolean
-//write code to check if username and password match the one we have in records.
-/*users.forEach((user)=>{
-    //console.log(user.username+"---"+username);
-    if(user.username===username)
+    let userFound = users.filter(user => user.username===username && user.password===password);
+    if(userFound.length>0)
         return true;
-    
-});
-return false;*/
-    return users.some(user => user.username===username && user.password===password);
+    else
+        return false;
+    //return users.some(user => user.username===username && user.password===password);
 }
 
 //only registered users can login
@@ -29,9 +26,12 @@ regd_users.post("/login", (req,res) => {
   let usr = req.body.username;
   let pwd = req.body.password;
   
-console.log(authenticatedUser(usr,pwd));
-  if(authenticatedUser(usr,pwd))
-    return res.status(200).json({message: "Login successfull"})
+
+  if(authenticatedUser(usr,pwd)){
+    let authSession=jwt.sign({data:pwd},"access",{expiresIn:60});
+    req.session.auth = {authSession,usr};
+    return res.status(200).json({message: "Login successful"})
+  }
   else
     return res.status(300).json({message: "Login error"});
 });
