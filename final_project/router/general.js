@@ -11,14 +11,14 @@ public_users.post("/register", (req,res) => {
   passwordP = req.body.password;
 
   let userExists = users.filter(function(userF){
-    return userF[0]===usernameP;
+    return userF.username===usernameP;
   });
-
+//console.log(userExists);
   if(userExists.length>0)
     return res.status(300).json({message: "User already exists"});
   else
   {
-      let result = users.push([usernameP,passwordP]);
+      let result = users.push({"username":usernameP,"password":passwordP});
     if (result)
         return res.send("User addded");
     else

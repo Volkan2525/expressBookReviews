@@ -6,7 +6,7 @@ const genl_routes = require('./router/general.js').general;
 
 const app = express();
 
-app.use(customer_routes);
+//app.use("/login",customer_routes);
 
 app.use(express.json());
 
@@ -22,7 +22,7 @@ app.use("/customer/auth/*", function auth(req,res,next){
     }
 });
  
-const PORT =5002;
+const PORT =5003;
 
 app.use("/customer", customer_routes);
 app.use("/", genl_routes);

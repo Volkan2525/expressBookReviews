@@ -13,23 +13,27 @@ username != ""
 
 const authenticatedUser = (username,password)=>{ //returns boolean
 //write code to check if username and password match the one we have in records.
-    users.filter(function(userF) {
-        return userF[0]==username && userF[1]==password;
-    });
+/*users.forEach((user)=>{
+    //console.log(user.username+"---"+username);
+    if(user.username===username)
+        return true;
+    
+});
+return false;*/
+    return users.some(user => user.username===username && user.password===password);
 }
 
 //only registered users can login
 regd_users.post("/login", (req,res) => {
-    console.log(req);
   //Write your code here
   let usr = req.body.username;
   let pwd = req.body.password;
-  let result = authenticatedUser(usr,pwd);
-  console.log(result)
-  if(result!="")
+  
+console.log(authenticatedUser(usr,pwd));
+  if(authenticatedUser(usr,pwd))
     return res.status(200).json({message: "Login successfull"})
   else
-    return res.status(300).json({message: "Yet to be implemented"});
+    return res.status(300).json({message: "Login error"});
 });
 
 // Add a book review
