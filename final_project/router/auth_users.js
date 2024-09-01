@@ -28,8 +28,8 @@ regd_users.post("/login", (req,res) => {
   
 
   if(authenticatedUser(usr,pwd)){
-    let authSession=jwt.sign({data:pwd},"access",{expiresIn:60});
-    req.session.auth = {authSession,usr};
+    let accessToken=jwt.sign({data:pwd},"access",{expiresIn:60});
+    req.session.auth = {accessToken,usr};
     return res.status(200).json({message: "Login successful"})
   }
   else

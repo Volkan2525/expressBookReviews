@@ -14,16 +14,19 @@ app.use("/customer",session({secret:"fingerprint_customer",resave: true, saveUni
 
 app.use("/customer/auth/*", function auth(req,res,next){
 //Write the authenication mechanism here
-    //console.log(req.session.authorizarion);
-    /*let user = req.body.username;
-    let accessToken = jwt.sign({data:password},"access",60);
-    req.session.authorizarion = {
-        accessToken, user
-    }*/
-    let result = jwt.verify(res.header["auth"],"access",{complete:true});
-    console.log(result);
-    if(result)
-        next();
+let err= "";
+if(!req.session.auth)
+    res.status(403).json({"message":"auth error"});
+    
+    jwt.verify(req.session.auth["accessToken"],"access",(err) => {
+        console.log("MEESAGE"+err);
+        if(!err){
+            res.status(200).json({"message":"auth ok"});
+            next();       
+        }
+        else
+            res.status(403).json({"message":"auth error"})
+    });
 });
  
 const PORT =5001;
