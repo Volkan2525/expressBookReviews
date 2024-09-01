@@ -20,7 +20,7 @@ if(!req.session.auth)
     
     jwt.verify(req.session.auth["accessToken"],"access",(err) => {
         if(!err){
-            res.status(200).json({"message":"auth ok"});
+            res.status(200).json({"message":"auth successful"});
             next();       
         }
         else

@@ -20,7 +20,7 @@ public_users.post("/register", (req,res) => {
   {
       let result = users.push({"username":usernameP,"password":passwordP});
     if (result)
-        return res.send("User addded");
+        return res.send(usernameP+" is registered succesfully");
     else
         return res.status(300).json({message: "Yet to be implemented"});
   }
@@ -32,21 +32,11 @@ public_users.post("/register", (req,res) => {
 public_users.get('/',function (req, res) {
   //Write your code here
   let listPromise=new Promise((resolve,reject)=>{
-    try{
-        resolve(JSON.stringify(books,null,4));
-
-    }
-    catch
-    {
-        reject(res.status(404).json({"message":"Book list error"}));        
-    }
+    resolve(JSON.stringify(books,null,4));
   });
 
-  listPromise.then((resolve,reject)=>{
-  if (resolve)
-    res.send(resolve);
-  else
-    return res.send(reject);
+  listPromise.then((successMessage)=>{
+    res.send(successMessage);
   });
   
 
@@ -57,21 +47,12 @@ public_users.get('/isbn/:isbn',function (req, res) {
   //Write your code here
   let isbnParam = req.params.isbn;
   let isbnPromise=new Promise((resolve,reject)=>{
-    try{
-        let bookFound = books[isbnParam];
-        resolve(bookFound);
-    }
-    catch{
-        reject(res.status(404).json({message: "Book not found"}));
-    }
-
+    let bookFound = books[isbnParam];
+    resolve(bookFound);
   });
 
-  isbnPromise.then((resolve,reject)=>{
-    if(resolve)
-        res.send(resolve);
-    else
-        res.send(reject);
+  isbnPromise.then((successMessage)=>{
+        res.send(successMessage);
    });
   
  });
@@ -79,13 +60,21 @@ public_users.get('/isbn/:isbn',function (req, res) {
 // Get book details based on author
 public_users.get('/author/:author',function (req, res) {
   //Write your code here
-  let authorParam = req.params.author;
-  const bookArray = Object.keys(books);
+  let aPromise = new Promise((resolve,reject)=>{
 
-  bookArray.forEach(element => {
-    if(books[element]['author']==authorParam)
-        res.send(books[element])
-  });
+        let authorParam = req.params.author;
+        const bookArray = Object.keys(books);
+
+        bookArray.forEach(element => {
+            if(books[element]['author']==authorParam)
+                resolve(books[element]);
+        });
+    });
+
+    aPromise.then((successMessage)=>{
+        res.send(successMessage);
+    });
+
 
     //return res.status(300).json({message: "Yet to be implemented"});
 });
@@ -93,13 +82,21 @@ public_users.get('/author/:author',function (req, res) {
 // Get all books based on title
 public_users.get('/title/:title',function (req, res) {
   //Write your code here
+  let tPromise = new Promise((resolve,reject)=>{
+
     let titleParam = req.params.title;
     const bookArray = Object.keys(books);
   
     bookArray.forEach(element => {
       if(books[element]['title']==titleParam)
-          res.send(books[element])
+          resolve(books[element])
     });
+
+  });
+
+  tPromise.then((successMessage)=>{
+    res.status(200).json({"message":successMessage})
+  });
   
       //return res.status(300).json({message: "Yet to be implemented"});
 });
