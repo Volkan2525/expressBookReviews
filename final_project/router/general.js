@@ -31,22 +31,49 @@ public_users.post("/register", (req,res) => {
 // Get the book list available in the shop
 public_users.get('/',function (req, res) {
   //Write your code here
-  bookList = JSON.stringify(books,null,4);
-  if (bookList)
-    res.send(bookList);
+  let listPromise=new Promise((resolve,reject)=>{
+    try{
+        resolve(JSON.stringify(books,null,4));
+
+    }
+    catch
+    {
+        reject(res.status(404).json({"message":"Book list error"}));        
+    }
+  });
+
+  listPromise.then((resolve,reject)=>{
+  if (resolve)
+    res.send(resolve);
   else
-    return res.status(300).json({message: "Book list not found"});
+    return res.send(reject);
+  });
+  
+
 });
 
 // Get book details based on ISBN
 public_users.get('/isbn/:isbn',function (req, res) {
   //Write your code here
   let isbnParam = req.params.isbn;
-  let bookFound = books[isbnParam]
-  if(bookFound)
-    return res.send(bookFound)
-  else
-    return res.status(300).json({message: "Book not found"});
+  let isbnPromise=new Promise((resolve,reject)=>{
+    try{
+        let bookFound = books[isbnParam];
+        resolve(bookFound);
+    }
+    catch{
+        reject(res.status(404).json({message: "Book not found"}));
+    }
+
+  });
+
+  isbnPromise.then((resolve,reject)=>{
+    if(resolve)
+        res.send(resolve);
+    else
+        res.send(reject);
+   });
+  
  });
   
 // Get book details based on author

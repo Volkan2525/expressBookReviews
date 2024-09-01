@@ -16,10 +16,9 @@ app.use("/customer/auth/*", function auth(req,res,next){
 //Write the authenication mechanism here
 let err= "";
 if(!req.session.auth)
-    res.status(403).json({"message":"auth error"});
+    return res.status(403).json({"message":"auth error"});
     
     jwt.verify(req.session.auth["accessToken"],"access",(err) => {
-        console.log("MEESAGE"+err);
         if(!err){
             res.status(200).json({"message":"auth ok"});
             next();       
